@@ -13,14 +13,33 @@ class Changelog {
     }
 
     setupEventListeners() {
-        // Toggle panel on tab click
-        this.tab.addEventListener('click', () => this.togglePanel());
+        // Клик по табу — открыть/закрыть
+        this.tab.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.togglePanel();
+        });
+
+        // Клик вне панели — закрыть
+        document.addEventListener('click', (e) => {
+            if (
+                this.panel.classList.contains('open') &&
+                !this.panel.contains(e.target) &&
+                !this.tab.contains(e.target)
+            ) {
+                this.closePanel();
+            }
+        });
+
+        // Escape — закрыть
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.panel.classList.contains('open')) {
+                this.closePanel();
+            }
+        });
     }
 
     togglePanel() {
-        const isOpen = this.panel.classList.contains('open');
-        
-        if (isOpen) {
+        if (this.panel.classList.contains('open')) {
             this.closePanel();
         } else {
             this.openPanel();
@@ -31,20 +50,20 @@ class Changelog {
         this.panel.classList.add('open');
         this.panel.setAttribute('aria-hidden', 'false');
         this.tab.setAttribute('aria-expanded', 'true');
-        this.tab.setAttribute('aria-label', 'Close changelog');
-        
-        const firstItem = this.panel.querySelector('.changelog-item');
-        if (firstItem) firstItem.focus();
     }
 
     closePanel() {
         this.panel.classList.remove('open');
         this.panel.setAttribute('aria-hidden', 'true');
         this.tab.setAttribute('aria-expanded', 'false');
-        this.tab.setAttribute('aria-label', 'Open changelog');
     }
 
     renderEntries() {
+        if (!this.entries.length) {
+            this.items.innerHTML = '<p style="color:#95a5a6;text-align:center;padding:20px;">Обновлений пока нет.</p>';
+            return;
+        }
+
         this.items.innerHTML = this.entries
             .sort((a, b) => new Date(b.date) - new Date(a.date))
             .map(entry => this.createEntryElement(entry))
@@ -53,16 +72,16 @@ class Changelog {
 
     createEntryElement(entry) {
         const date = new Date(entry.date);
-        const formattedDate = date.toLocaleDateString('en-US', {
+        const formattedDate = date.toLocaleDateString('ru-RU', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
 
-        // Handle both old format (changes array) and new format (categories)
         if (entry.categories) {
-            // New categorized format
-            const title = entry.title ? `<h4 class="changelog-title">${entry.title}</h4>` : '';
+            const title = entry.title
+                ? `<h4 class="changelog-title">${entry.title}</h4>`
+                : '';
             const categoriesHtml = Object.entries(entry.categories)
                 .map(([categoryName, changes]) => `
                     <div class="changelog-category">
@@ -83,7 +102,6 @@ class Changelog {
                 </div>
             `;
         } else {
-            // Old format (backward compatibility)
             return `
                 <div class="changelog-item">
                     <div class="changelog-date">${formattedDate}</div>
@@ -96,20 +114,8 @@ class Changelog {
             `;
         }
     }
-
-    addEntry(date, changes) {
-        this.entries.push({ date, changes });
-        this.renderEntries();
-    }
 }
 
-// Initialize changelog when document is ready and data is available
 document.addEventListener('DOMContentLoaded', () => {
-    // Wait for CHANGELOG_ENTRIES to be available
-    if (typeof CHANGELOG_ENTRIES !== 'undefined') {
-        window.changelog = new Changelog();
-    } else {
-        // Fallback: initialize with empty entries
-        window.changelog = new Changelog();
-    }
-}); 
+    window.changelog = new Changelog();
+});
