@@ -1,102 +1,215 @@
 <!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  Чатлог Маг — GTA World RU                                      ║
+  ║  Основан на: blancodagoat → aayorishy → kelewya → dillema1 [RU] ║
+  ║                                                                  ║
+  ║  КАК ВНОСИТЬ ОБНОВЛЕНИЯ БЕЗОПАСНО:                              ║
+  ║  1. Текст кнопок/UI  → ищите секцию «── UI ТЕКСТ ──»            ║
+  ║  2. Версии CDN-библиотек → ищите секцию «── CDN БИБЛИОТЕКИ ──»  ║
+  ║  3. Новые JS-файлы → секция «── APP SCRIPTS ──»                 ║
+  ║  4. Цвета палитры → секция «── ПАЛИТРА ЦВЕТОВ ──»               ║
+  ║  5. Тултипы/справка → секция «── ТУЛТИП-СПРАВКА ──»             ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="author" content="asapdev" />
-  <meta name="modified by" content="blanco, dillema1" />
-  <meta name="description" content="Чатлог Маг для GTA World RU" />
-  <meta name="keywords" content="GTAW, GTAWorld, GTA World, RAGE MP, chatlog magician, chatlog, magician, ru, русский" />
-  <title>Chatlog Magician — GTA World RU</title>
+  <meta name="author" content="asapdev, blanco, kelewya, dillema1" />
+  <meta name="description" content="Чатлог Маг для GTA World (RU) — конвертер чатлогов в изображения" />
+  <meta name="keywords" content="GTAW, GTAWorld, GTA World, RAGE MP, chatlog magician, chatlog, русский, ru" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="msapplication-navbutton-color" content="#000000" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
+  <title>Чатлог Маг — GTA World RU</title>
+
+  <!-- Preload критических ресурсов -->
+  <link rel="preload" href="css/foundation.fixed.css" as="style" />
+  <link rel="preload" href="js/app.js" as="script" />
+
+  <!-- ── СТИЛИ ── -->
+  <link rel="stylesheet" href="css/foundation.fixed.css" />
+  <link rel="stylesheet" href="css/modern.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/fontawesome.min.css" />
+  <!-- color-palette подключается если папка есть; если нет — не сломает страницу -->
+  <link rel="stylesheet" href="color-palette/color-palette.css" onerror="this.remove()" />
+
+  <link rel="icon" href="favicon.png" type="image/png" />
+
+  <!-- Обработчики ошибок грузим первыми, без defer -->
   <script src="js/error-handler.js"></script>
   <script src="js/cross-origin-fix.js"></script>
-
-  <link rel="stylesheet" href="css/foundation.fixed.css" />
-  <link rel="stylesheet" href="css/app.css" />
-  <link rel="stylesheet" href="css/modern.css" />
-  <link rel="stylesheet" href="css/fontawesome.min.css" />
-  <link rel="icon" href="favicon.png" />
+  <!-- cors-handler только если файл существует в репо -->
+  <script src="js/cors-handler.js" onerror="void 0"></script>
 
   <style>
-    label {
-      display: none;
-    }
-    ::-webkit-input-placeholder {
-      color: black;
-    }
-    :-ms-input-placeholder {
-      color: black;
-    }
-    ::placeholder {
-      color: black;
-    }
-    #chatlogInput::placeholder {
-      color: transparent;
+    /* скрываем лейблы — они нужны только для скринридеров */
+    label { display: none; }
+
+    ::-webkit-input-placeholder { color: black; }
+    :-ms-input-placeholder      { color: black; }
+    ::placeholder               { color: black; }
+    #chatlogInput::placeholder  { color: transparent; }
+
+    /* убираем лишние стили Buy Me a Coffee кнопки если она есть */
+    .bmc-btn {
+      background-color: transparent !important;
+      min-width: auto !important;
+      height: 38px !important;
+      padding: 0 12px !important;
+      line-height: 1 !important;
     }
   </style>
 </head>
+
 <body>
 
 <div class="grid-container">
   <div class="grid-x grid-margin-x">
     <div class="cell small-12">
 
+      <!-- ── ВЕРХНЯЯ ПАНЕЛЬ НАСТРОЕК ── -->
       <div class="grid-x grid-margin-x align-middle">
 
-        <!-- Размер шрифта -->
+        <!-- ── UI ТЕКСТ ── Размер шрифта -->
         <div class="cell small-4 medium-2">
           <label for="font-label">Размер шрифта:</label>
-          <input name="font-label" id="font-label" type="number" min="10" max="64" value="12" />
+          <input
+            name="font-label"
+            id="font-label"
+            type="number"
+            min="1"
+            max="64"
+            value="12"
+            aria-label="Размер шрифта"
+          />
         </div>
 
-        <!-- Длина строки -->
+        <!-- ── UI ТЕКСТ ── Длина строки -->
         <div class="cell small-4 medium-2">
           <label for="lineLengthInput">Длина строки:</label>
-          <input type="number" id="lineLengthInput" min="50" max="150" value="77">
+          <input
+            type="number"
+            id="lineLengthInput"
+            min="1"
+            max="150"
+            value="77"
+            aria-label="Длина строки (символов до переноса)"
+          />
         </div>
 
-        <!-- Фильтр по имени персонажа -->
+        <!-- ── UI ТЕКСТ ── Фильтр по имени -->
         <div class="cell small-8 medium-8">
-          <label for="characterNameInput">Фильтр по имени:</label>
-          <div class="input-group">
-            <input type="text" id="characterNameInput" placeholder="Введите имя персонажа" />
-            <div class="input-group-button">
-              <button class="button small" onclick="applyFilter()">Применить</button>
+          <label for="characterNameInput">Фильтр по имени персонажа:</label>
+          <div class="input-group" style="position: relative;">
+            <input
+              type="text"
+              id="characterNameInput"
+              placeholder="Введите имя персонажа"
+              autocomplete="off"
+              aria-label="Фильтр по имени персонажа"
+            />
+            <div class="input-group-button" style="display: flex; gap: 4px;">
+              <button class="button small" id="addCharacterBtn" type="button" aria-label="Добавить персонажа">
+                Добавить
+              </button>
+              <button class="button small" id="showCharacterListBtn" type="button" aria-label="Показать список">
+                &#9660;
+              </button>
             </div>
+            <!-- Выпадающий список добавленных персонажей -->
+            <div
+              id="characterNameDropdown"
+              class="character-dropdown"
+              style="display: none; position: absolute; top: 110%; left: 0; right: 0;
+                     background: #222; color: #fff; border: 1px solid #444;
+                     z-index: 1000; max-height: 150px; overflow-y: auto;"
+              role="listbox"
+            ></div>
           </div>
         </div>
 
       </div>
+      <!-- /ВЕРХНЯЯ ПАНЕЛЬ -->
 
-      <!-- Текстовое поле чатлога -->
+      <!-- ── ПОЛЕ ВВОДА ЧАТЛОГА ── -->
       <label for="chatlogInput">Чатлог:</label>
       <div class="textarea-container">
-        <textarea id="chatlogInput" class="form-control textarea-input" rows="15" placeholder="Вставьте чатлог сюда..."></textarea>
+        <textarea
+          id="chatlogInput"
+          class="form-control textarea-input"
+          rows="15"
+          placeholder="Вставьте чатлог сюда..."
+          aria-label="Ввод чатлога"
+        ></textarea>
         <div class="logo-overlay">
-          <img src="logo.png" alt="Логотип" loading="lazy" />
+          <img src="logo.png" alt="Логотип" loading="lazy" onerror="this.parentElement.style.display='none'" />
         </div>
       </div>
 
-      <!-- Кнопки управления -->
+      <!-- ── ПАНЕЛЬ КНОПОК ── -->
       <div class="grid-x grid-margin-x align-middle">
         <div class="cell auto">
 
-          <button id="downloadOutputTransparent" class="button success"> Скачать </button>
-          <button id="toggleBackground" class="button secondary"> Фон </button>
-          <button id="toggleCensorshipStyle" class="button"> Стиль цензуры </button>
-          <button id="censorCharButton" class="button secondary censor-char-button">÷</button>
-          <button id="toggleColorPalette" class="button secondary"> Цвет текста </button>
+          <!-- ── UI ТЕКСТ ── кнопки -->
+          <button id="downloadOutputTransparent" class="button success" aria-label="Скачать изображение">
+            Скачать
+          </button>
 
-          <!-- Кнопка-справка с тултипом -->
-          <button class="info-bracket" aria-label="Информация о форматировании текста">
+          <button id="toggleBackground" class="button secondary" aria-label="Переключить фон">
+            Фон
+          </button>
+
+          <button
+            id="toggleOutputFont"
+            class="button secondary"
+            aria-label="Переключить шрифт"
+            title="Переключить между стандартным шрифтом и Trebuchet MS"
+          >
+            Шрифт: Стандартный
+          </button>
+
+          <button
+            id="toggleCharacterNameColoring"
+            class="button secondary"
+            aria-label="Переключить окрашивание имён"
+            title="Отключить автоматическое определение цвета по имени персонажа"
+          >
+            Окрашивание имён
+          </button>
+
+          <button id="toggleCensorshipStyle" class="button" aria-label="Переключить стиль цензуры">
+            Стиль цензуры
+          </button>
+
+          <button
+            id="censorCharButton"
+            class="button secondary censor-char-button"
+            aria-label="Скопировать символ цензуры ÷"
+            title="Скопировать символ ÷"
+          >÷</button>
+
+          <button
+            id="toggleColorPalette"
+            class="button secondary"
+            aria-label="Открыть палитру цветов"
+            title="Выделите текст в превью и нажмите для окрашивания"
+          >
+            Цвет текста
+          </button>
+
+          <!-- ── ТУЛТИП-СПРАВКА ── Редактируйте только текст внутри span.tooltip-text -->
+          <button class="info-bracket" aria-label="Справка по форматированию">
             <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
             Справка
             <span class="tooltip-text" role="tooltip">
-              Выделить телефонную линию: начните строку с «!», чтобы она стала жёлтой.<br>
-              Цензура: оберните текст символом «÷» с двух сторон. Нажмите кнопку ÷, чтобы скопировать символ.<br>
-              Цвет текста: выделите текст в превью, нажмите «Цвет текста» и выберите цвет.
+              <strong>Телефонная линия:</strong> начните строку с «!» — она станет жёлтой.<br>
+              <strong>Цензура:</strong> оберните текст символом «÷» с двух сторон. Нажмите кнопку ÷, чтобы скопировать символ.<br>
+              <strong>Цвет текста:</strong> выделите текст в превью, нажмите «Цвет текста» и выберите нужный цвет.
             </span>
           </button>
 
@@ -107,55 +220,141 @@
           <div class="switch large">
             <input class="switch-input" id="scaleToggle" type="checkbox" name="scale-toggle" />
             <label class="switch-paddle" for="scaleToggle">
-              <span class="switch-active" aria-hidden="true">2x</span>
+              <span class="switch-active"   aria-hidden="true">2x</span>
               <span class="switch-inactive" aria-hidden="true">1x</span>
             </label>
           </div>
         </div>
       </div>
+      <!-- /ПАНЕЛЬ КНОПОК -->
 
-      <!-- Область вывода -->
-      <div id="output" class="output">
+      <!-- ── ОБЛАСТЬ ВЫВОДА ── -->
+      <div id="output" class="output" role="region" aria-label="Превью чатлога">
         <div class="normal-content">Видимый текст</div>
         <div class="censored-content pixelated">Скрытый текст</div>
-      </div>
-
-      <!-- Палитра цветов -->
-      <div id="colorPalette" class="color-palette" style="display: none;">
-        <div class="color-palette-header">Выберите цвет</div>
-        <div class="color-palette-items">
-          <div class="color-item me"            data-color="me">Me</div>
-          <div class="color-item ame"           data-color="ame">Ame</div>
-          <div class="color-item darkgrey"      data-color="darkgrey">Тёмно-серый</div>
-          <div class="color-item grey"          data-color="grey">Серый</div>
-          <div class="color-item lightgrey"     data-color="lightgrey">Светло-серый</div>
-          <div class="color-item death"         data-color="death">Смерть</div>
-          <div class="color-item yellow"        data-color="yellow">Жёлтый</div>
-          <div class="color-item green"         data-color="green">Зелёный</div>
-          <div class="color-item orange"        data-color="orange">Оранжевый</div>
-          <div class="color-item blue"          data-color="blue">Синий</div>
-          <div class="color-item white"         data-color="white">Белый</div>
-          <div class="color-item radioColor"    data-color="radioColor">Радио</div>
-          <div class="color-item radioColor2"   data-color="radioColor2">Радио 2</div>
-          <div class="color-item depColor"      data-color="depColor">Департамент</div>
-          <div class="color-item vesseltraffic" data-color="vesseltraffic">Судно</div>
-          <div class="color-item toyou"         data-color="toyou">Тебе</div>
-        </div>
       </div>
 
     </div>
   </div>
 </div>
+<!-- /grid-container -->
 
+<!-- ── ИСТОРИЯ ЧАТЛОГОВ ── -->
+<div
+  class="history-tab"
+  onclick="toggleHistoryPanel()"
+  role="button"
+  tabindex="0"
+  aria-label="Открыть историю чатлогов"
+  aria-expanded="false"
+>
+  <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
+</div>
+
+<div
+  id="historyPanel"
+  class="history-panel"
+  role="dialog"
+  aria-label="История чатлогов"
+  aria-hidden="true"
+>
+  <div class="history-header">
+    <h3>История чатлогов</h3>
+  </div>
+  <div class="history-items" role="list"></div>
+</div>
+
+<!-- ── ПАЛИТРА ЦВЕТОВ ──
+     ВАЖНО: data-color — не менять! это ключи для JS.
+     data-tooltip — редактировать свободно.
+     Добавить новый цвет: скопируйте строку, задайте уникальный data-color,
+     добавьте CSS-класс в app.css.
+-->
+<div id="colorPalette" class="color-palette" style="display: none;">
+  <div class="color-palette-header">
+    Выбрать цвет
+    <div class="selection-counter">0 выбрано</div>
+  </div>
+  <div class="color-palette-items">
+    <div class="color-item me"            data-color="me"            data-tooltip="/me действие"></div>
+    <div class="color-item ame"           data-color="ame"           data-tooltip="/ame действие"></div>
+    <div class="color-item darkgrey"      data-color="darkgrey"      data-tooltip="Тихий разговор (далеко)"></div>
+    <div class="color-item grey"          data-color="grey"          data-tooltip="Тихий разговор (близко)"></div>
+    <div class="color-item lightgrey"     data-color="lightgrey"     data-tooltip="Обычный текст"></div>
+    <div class="color-item death"         data-color="death"         data-tooltip="Смерть / Системные сообщения"></div>
+    <div class="color-item yellow"        data-color="yellow"        data-tooltip="Важная информация / телефон"></div>
+    <div class="color-item green"         data-color="green"         data-tooltip="Успех / ОАД"></div>
+    <div class="color-item orange"        data-color="orange"        data-tooltip="Предупреждение"></div>
+    <div class="color-item blue"          data-color="blue"          data-tooltip="Информация"></div>
+    <div class="color-item white"         data-color="white"         data-tooltip="Белый текст"></div>
+    <div class="color-item radioColor"    data-color="radioColor"    data-tooltip="Рация (основной канал)"></div>
+    <div class="color-item radioColor2"   data-color="radioColor2"   data-tooltip="Рация (второй канал)"></div>
+    <div class="color-item depColor"      data-color="depColor"      data-tooltip="Рация департамента"></div>
+    <div class="color-item vesseltraffic" data-color="vesseltraffic" data-tooltip="Vessel Traffic (морская рация)"></div>
+    <div class="color-item toyou"         data-color="toyou"         data-tooltip="Реплика к вам — [!]"></div>
+  </div>
+</div>
+
+<!-- ── ЧЕЙНДЖЛОГ ──
+     Новые записи об обновлениях вносите ТОЛЬКО в js/changelog-data.js
+     Этот файл трогать не нужно.
+-->
+<div
+  class="changelog-tab"
+  role="button"
+  tabindex="0"
+  aria-label="Открыть список обновлений"
+  aria-expanded="false"
+>
+  <i class="fas fa-list" aria-hidden="true"></i>
+</div>
+
+<div
+  id="changelogPanel"
+  class="changelog-panel"
+  role="dialog"
+  aria-label="Список обновлений"
+  aria-hidden="true"
+>
+  <div class="changelog-header">
+    <h3>Обновления</h3>
+  </div>
+  <div class="changelog-items" role="list"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ── CDN БИБЛИОТЕКИ ──
+     Чтобы обновить версию — меняйте только номер в URL.
+
+     ⚠️  ПРЕДУПРЕЖДЕНИЕ: jQuery 4.x несовместим с Foundation 6!
+         Не обновляйте jQuery выше 3.x без полного теста.
+     ═══════════════════════════════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.8.1/js/foundation.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/3.4.4/dom-to-image-more.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="js/parse-text.js"></script>
-<script src="js/chat.js"></script>
-<script src="js/color-picker.js"></script>
-<script src="js/chatlog-parser.js"></script>
-<script src="js/app.js"></script>
+
+<!-- ── APP SCRIPTS ──
+     Порядок важен. Не переставляйте без понимания зависимостей.
+     Новые модули добавляйте перед app.js.
+     onerror="void 0" — необязательные файлы, без них страница не сломается.
+-->
+<script src="js/parse-text.js"               defer></script>
+<script src="js/chat.js"                     defer></script>
+<script src="color-palette/color-palette.js" defer onerror="void 0"></script>
+<script src="js/chatlog-parser.js"           defer></script>
+<script src="js/changelog-data.js"           defer onerror="void 0"></script>
+<script src="js/changelog.js"                defer onerror="void 0"></script>
+<script src="js/app.js"                      defer></script>
+
+<!-- Инициализация ColorPalette после загрузки DOM -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof ColorPalette !== 'undefined') {
+      ColorPalette.init();
+    }
+  });
+</script>
 
 </body>
 </html>
