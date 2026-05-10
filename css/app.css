@@ -897,3 +897,64 @@ html::-webkit-scrollbar {
 		height: 70px;
 	}
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ЗАКРЕПЛЁННЫЙ БЛОК ЧЕЙНДЖЛОГА (warning-баннер)
+   ═══════════════════════════════════════════════════════════════ */
+
+.changelog-pinned {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 10px 10px 16px;
+    padding: 12px 14px;
+    background: rgba(220, 38, 38, 0.15);
+    border: 1px solid rgba(220, 38, 38, 0.5);
+    border-left: 4px solid #dc2626;
+    border-radius: 6px;
+    color: #fca5a5;
+}
+
+.changelog-pinned-icon {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #ef4444;
+}
+
+.changelog-pinned-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.changelog-pinned-version {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #ef4444;
+}
+
+.changelog-pinned-text {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #fca5a5;
+}
+
+.changelog-pinned-link {
+    display: inline-block;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f87171;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+}
+
+.changelog-pinned-link:hover {
+    color: #fff;
+}
