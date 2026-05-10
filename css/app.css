@@ -958,3 +958,56 @@ html::-webkit-scrollbar {
 .changelog-pinned-link:hover {
     color: #fff;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ПАЛИТРА ЦВЕТОВ — цвет текста и подписи для каждого элемента
+   ═══════════════════════════════════════════════════════════════ */
+
+.color-item { color: #aaa; font-size: 12px; font-weight: 600; }
+
+.color-item.me::after            { content: 'Me';              color: #c2a3da; }
+.color-item.ame::after           { content: 'Ame';             color: #c2a3da; }
+.color-item.darkgrey::after      { content: 'Тихо (далеко)';   color: #5a5a5b; }
+.color-item.grey::after          { content: 'Тихо (близко)';   color: #939799; }
+.color-item.lightgrey::after     { content: 'Обычный';         color: #c6c4c4; }
+.color-item.death::after         { content: 'Смерть';          color: #f00000; }
+.color-item.yellow::after        { content: 'Жёлтый';          color: #fbf724; }
+.color-item.green::after         { content: 'Зелёный';         color: #56d64b; }
+.color-item.orange::after        { content: 'Оранжевый';       color: #eda841; }
+.color-item.blue::after          { content: 'Синий';           color: #3896f3; }
+.color-item.white::after         { content: 'Белый';           color: #f1f1f1; }
+.color-item.radioColor::after    { content: 'Рация';           color: #D6CF8C; }
+.color-item.radioColor2::after   { content: 'Рация 2';         color: #a19558; }
+.color-item.depColor::after      { content: 'Деп.';            color: #ccca15; }
+.color-item.vesseltraffic::after { content: 'Vessel';          color: #33C1C9; }
+.color-item.toyou::after         { content: '[!] Тебе';        color: #ff00bc; }
+
+/* Левая полоска — цветовой индикатор */
+.color-item {
+    position: relative;
+    padding-left: 14px;
+    border-left: 4px solid transparent;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+}
+
+.color-item.me            { border-left-color: #c2a3da; }
+.color-item.ame           { border-left-color: #c2a3da; }
+.color-item.darkgrey      { border-left-color: #5a5a5b; }
+.color-item.grey          { border-left-color: #939799; }
+.color-item.lightgrey     { border-left-color: #c6c4c4; }
+.color-item.death         { border-left-color: #f00000; }
+.color-item.yellow        { border-left-color: #fbf724; }
+.color-item.green         { border-left-color: #56d64b; }
+.color-item.orange        { border-left-color: #eda841; }
+.color-item.blue          { border-left-color: #3896f3; }
+.color-item.white         { border-left-color: #f1f1f1; }
+.color-item.radioColor    { border-left-color: #D6CF8C; }
+.color-item.radioColor2   { border-left-color: #a19558; }
+.color-item.depColor      { border-left-color: #ccca15; }
+.color-item.vesseltraffic { border-left-color: #33C1C9; }
+.color-item.toyou         { border-left-color: #ff00bc; }
