@@ -1,135 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
- <head>
+<html lang="ru">
+<head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="asapdev" />
-  <meta name="modified by" content="blanco" />
-  <meta name="description" content="Chatlog Magician for GTA World" />
-  <meta name="keywords" content="GTAW, GTAWorld, GTA World, RAGE MP, chatlog magician, chatlog, magician" />
-  <title>Chatlog Magician</title>
+  <meta name="modified by" content="blanco, dillema1" />
+  <meta name="description" content="Чатлог Маг для GTA World RU" />
+  <meta name="keywords" content="GTAW, GTAWorld, GTA World, RAGE MP, chatlog magician, chatlog, magician, ru, русский" />
+  <title>Chatlog Magician — GTA World RU</title>
+
   <script src="js/error-handler.js"></script>
   <script src="js/cross-origin-fix.js"></script>
+
   <link rel="stylesheet" href="css/foundation.fixed.css" />
   <link rel="stylesheet" href="css/app.css" />
   <link rel="stylesheet" href="css/modern.css" />
   <link rel="stylesheet" href="css/fontawesome.min.css" />
   <link rel="icon" href="favicon.png" />
+
   <style>
-   label {
-    display: none;
-   }
-
-   ::-webkit-input-placeholder {
-    color: black;
-   }
-
-   :-ms-input-placeholder {
-    color: black;
-   }
-
-   ::placeholder {
-    color: black;
-   }
-
-   #chatlogInput::placeholder {
-    color: transparent;
-   }
+    label {
+      display: none;
+    }
+    ::-webkit-input-placeholder {
+      color: black;
+    }
+    :-ms-input-placeholder {
+      color: black;
+    }
+    ::placeholder {
+      color: black;
+    }
+    #chatlogInput::placeholder {
+      color: transparent;
+    }
   </style>
- </head>
- <body>
-    <div class="grid-container">
-        <div class="grid-x grid-margin-x">
-           <div class="cell small-12">
-              <div class="grid-x grid-margin-x align-middle">
-                 <div class="cell small-4 medium-2">
-                    <label for="font-label">Font Size:</label>
-                    <input name="font-label" id="font-label" type="number" min="10" max="64" value="12" />
-                 </div>
-                 <div class="cell small-4 medium-2">
-                    <label for="lineLengthInput">Line Length:</label>
-                    <input type="number" id="lineLengthInput" min="50" max="150" value="77">
-                 </div>
-                 <div class="cell small-8 medium-8">
-                    <label for="characterNameInput">Character Name Filter:</label>
-                    <div class="input-group">
-                       <input type="text" id="characterNameInput" placeholder="Enter character name" />
-                       <div class="input-group-button">
-                          <button class="button small" onclick="applyFilter()">Apply</button>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-              <label for="chatlogInput">Chat Log:</label>
-              <div class="textarea-container">
-                 <textarea id="chatlogInput" class="form-control textarea-input" rows="15" placeholder="Enter your chat log here..."></textarea>
-                 <div class="logo-overlay">
-                    <img src="logo.png" alt="Logo" loading="lazy" />
-                 </div>
-              </div>
-              <div class="grid-x grid-margin-x align-middle">
-                 <div class="cell auto">
-                    <button id="downloadOutputTransparent" class="button success"> Download </button>
-                    <button id="toggleBackground" class="button secondary"> Toggle Background </button>
-                    <button id="toggleCensorshipStyle" class="button"> Toggle Censorship Style </button>
-                    <button id="censorCharButton" class="button secondary censor-char-button">÷</button>
-                    <button id="toggleColorPalette" class="button secondary"> Color Text </button>
-                    <button class="info-bracket" aria-label="More information about text formatting">
-                     <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                     Tooltip
-                     <span class="tooltip-text" role="tooltip">Highlight Phone Lines: Start a line with "!" to color it yellow.<br>
-                       Censor: Wrap text with "÷" to censor it. Click the ÷ button to copy the character.<br>
-                       Color Text: Select text in the output, click "Color Text" and choose a color.
-                     </span>
-                   </button>
-                 </div>
-                 <div class="cell shrink">
-                    <div class="switch large">
-                       <input class="switch-input" id="scaleToggle" type="checkbox" name="scale-toggle" />
-                       <label class="switch-paddle" for="scaleToggle">
-                          <span class="switch-active" aria-hidden="true">2x</span>
-                          <span class="switch-inactive" aria-hidden="true">1x</span>
-                       </label>
-                    </div>
-                 </div>
-              </div>
-              <div id="output" class="output">
-                 <div class="normal-content">Visible Content</div>
-                 <div class="censored-content pixelated">Censored Content</div>
-              </div>
-              <div id="colorPalette" class="color-palette" style="display: none;">
-                <div class="color-palette-header">Select a color</div>
-                <div class="color-palette-items">
-                  <div class="color-item me" data-color="me">Me</div>
-                  <div class="color-item ame" data-color="ame">Ame</div>
-                  <div class="color-item darkgrey" data-color="darkgrey">Dark Grey</div>
-                  <div class="color-item grey" data-color="grey">Grey</div>
-                  <div class="color-item lightgrey" data-color="lightgrey">Light Grey</div>
-                  <div class="color-item death" data-color="death">Death</div>
-                  <div class="color-item yellow" data-color="yellow">Yellow</div>
-                  <div class="color-item green" data-color="green">Green</div>
-                  <div class="color-item orange" data-color="orange">Orange</div>
-                  <div class="color-item blue" data-color="blue">Blue</div>
-                  <div class="color-item white" data-color="white">White</div>
-                  <div class="color-item radioColor" data-color="radioColor">Radio</div>
-                  <div class="color-item radioColor2" data-color="radioColor2">Radio 2</div>
-                  <div class="color-item depColor" data-color="depColor">Dep</div>
-                  <div class="color-item vesseltraffic" data-color="vesseltraffic">Vessel</div>
-                  <div class="color-item toyou" data-color="toyou">To You</div>
-                </div>
-              </div>
-           </div>
+</head>
+<body>
+
+<div class="grid-container">
+  <div class="grid-x grid-margin-x">
+    <div class="cell small-12">
+
+      <div class="grid-x grid-margin-x align-middle">
+
+        <!-- Размер шрифта -->
+        <div class="cell small-4 medium-2">
+          <label for="font-label">Размер шрифта:</label>
+          <input name="font-label" id="font-label" type="number" min="10" max="64" value="12" />
         </div>
-     </div>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.8.1/js/foundation.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/3.4.4/dom-to-image-more.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-     <script src="js/parse-text.js"></script>
-     <script src="js/chat.js"></script>
-     <script src="js/color-picker.js"></script>
-     <script src="js/chatlog-parser.js"></script>
-     <script src="js/app.js"></script>
-  </body>
+
+        <!-- Длина строки -->
+        <div class="cell small-4 medium-2">
+          <label for="lineLengthInput">Длина строки:</label>
+          <input type="number" id="lineLengthInput" min="50" max="150" value="77">
+        </div>
+
+        <!-- Фильтр по имени персонажа -->
+        <div class="cell small-8 medium-8">
+          <label for="characterNameInput">Фильтр по имени:</label>
+          <div class="input-group">
+            <input type="text" id="characterNameInput" placeholder="Введите имя персонажа" />
+            <div class="input-group-button">
+              <button class="button small" onclick="applyFilter()">Применить</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Текстовое поле чатлога -->
+      <label for="chatlogInput">Чатлог:</label>
+      <div class="textarea-container">
+        <textarea id="chatlogInput" class="form-control textarea-input" rows="15" placeholder="Вставьте чатлог сюда..."></textarea>
+        <div class="logo-overlay">
+          <img src="logo.png" alt="Логотип" loading="lazy" />
+        </div>
+      </div>
+
+      <!-- Кнопки управления -->
+      <div class="grid-x grid-margin-x align-middle">
+        <div class="cell auto">
+
+          <button id="downloadOutputTransparent" class="button success"> Скачать </button>
+          <button id="toggleBackground" class="button secondary"> Фон </button>
+          <button id="toggleCensorshipStyle" class="button"> Стиль цензуры </button>
+          <button id="censorCharButton" class="button secondary censor-char-button">÷</button>
+          <button id="toggleColorPalette" class="button secondary"> Цвет текста </button>
+
+          <!-- Кнопка-справка с тултипом -->
+          <button class="info-bracket" aria-label="Информация о форматировании текста">
+            <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
+            Справка
+            <span class="tooltip-text" role="tooltip">
+              Выделить телефонную линию: начните строку с «!», чтобы она стала жёлтой.<br>
+              Цензура: оберните текст символом «÷» с двух сторон. Нажмите кнопку ÷, чтобы скопировать символ.<br>
+              Цвет текста: выделите текст в превью, нажмите «Цвет текста» и выберите цвет.
+            </span>
+          </button>
+
+        </div>
+
+        <!-- Переключатель масштаба 1x / 2x -->
+        <div class="cell shrink">
+          <div class="switch large">
+            <input class="switch-input" id="scaleToggle" type="checkbox" name="scale-toggle" />
+            <label class="switch-paddle" for="scaleToggle">
+              <span class="switch-active" aria-hidden="true">2x</span>
+              <span class="switch-inactive" aria-hidden="true">1x</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Область вывода -->
+      <div id="output" class="output">
+        <div class="normal-content">Видимый текст</div>
+        <div class="censored-content pixelated">Скрытый текст</div>
+      </div>
+
+      <!-- Палитра цветов -->
+      <div id="colorPalette" class="color-palette" style="display: none;">
+        <div class="color-palette-header">Выберите цвет</div>
+        <div class="color-palette-items">
+          <div class="color-item me"            data-color="me">Me</div>
+          <div class="color-item ame"           data-color="ame">Ame</div>
+          <div class="color-item darkgrey"      data-color="darkgrey">Тёмно-серый</div>
+          <div class="color-item grey"          data-color="grey">Серый</div>
+          <div class="color-item lightgrey"     data-color="lightgrey">Светло-серый</div>
+          <div class="color-item death"         data-color="death">Смерть</div>
+          <div class="color-item yellow"        data-color="yellow">Жёлтый</div>
+          <div class="color-item green"         data-color="green">Зелёный</div>
+          <div class="color-item orange"        data-color="orange">Оранжевый</div>
+          <div class="color-item blue"          data-color="blue">Синий</div>
+          <div class="color-item white"         data-color="white">Белый</div>
+          <div class="color-item radioColor"    data-color="radioColor">Радио</div>
+          <div class="color-item radioColor2"   data-color="radioColor2">Радио 2</div>
+          <div class="color-item depColor"      data-color="depColor">Департамент</div>
+          <div class="color-item vesseltraffic" data-color="vesseltraffic">Судно</div>
+          <div class="color-item toyou"         data-color="toyou">Тебе</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.8.1/js/foundation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/3.4.4/dom-to-image-more.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="js/parse-text.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/color-picker.js"></script>
+<script src="js/chatlog-parser.js"></script>
+<script src="js/app.js"></script>
+
+</body>
 </html>
