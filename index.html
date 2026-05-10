@@ -24,7 +24,7 @@
   <meta name="msapplication-navbutton-color" content="#000000" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-  <title>Chatlog Magician - RU</title>
+  <title>Чатлог Маг — GTA World RU</title>
 
   <!-- Preload критических ресурсов -->
   <link rel="preload" href="css/foundation.fixed.css" as="style" />
@@ -239,31 +239,6 @@
 </div>
 <!-- /grid-container -->
 
-<!-- ── ИСТОРИЯ ЧАТЛОГОВ ── -->
-<div
-  class="history-tab"
-  onclick="toggleHistoryPanel()"
-  role="button"
-  tabindex="0"
-  aria-label="Открыть историю чатлогов"
-  aria-expanded="false"
->
-  <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
-</div>
-
-<div
-  id="historyPanel"
-  class="history-panel"
-  role="dialog"
-  aria-label="История чатлогов"
-  aria-hidden="true"
->
-  <div class="history-header">
-    <h3>История чатлогов</h3>
-  </div>
-  <div class="history-items" role="list"></div>
-</div>
-
 <!-- ── ПАЛИТРА ЦВЕТОВ ──
      ВАЖНО: data-color — не менять! это ключи для JS.
      data-tooltip — редактировать свободно.
@@ -341,20 +316,10 @@
 -->
 <script src="js/parse-text.js"></script>
 <script src="js/chat.js"></script>
-<script src="color-palette/color-palette.js"></script>
 <script src="js/chatlog-parser.js"></script>
 <script src="js/changelog-data.js"></script>
 <script src="js/changelog.js"></script>
 <script src="js/app.js"></script>
-
-<!-- Инициализация ColorPalette после загрузки DOM -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    if (typeof ColorPalette !== 'undefined') {
-      ColorPalette.init();
-    }
-  });
-</script>
 
 </body>
 </html>
