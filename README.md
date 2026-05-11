@@ -11,7 +11,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/SA--MP-orange?style=for-the-badge">
   <img src="https://img.shields.io/badge/GTA%20World-6f42c1?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Версия-1.0.1-red?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Версия-1.0.1a-red?style=for-the-badge">
   <img src="https://img.shields.io/badge/Сделано%20с-любовью-ff69b4?style=for-the-badge">
 </p>
 
