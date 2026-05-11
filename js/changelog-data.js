@@ -55,7 +55,7 @@ const CHANGELOG_ENTRIES = [
 
 const CHANGELOG_ENTRIES = [
     {
-        date: '',
+        date: '2025-05-11',
         title: 'Версия 1.0.2 - Небольшие улучшения',
         categories: {
             'Основная информация': [
