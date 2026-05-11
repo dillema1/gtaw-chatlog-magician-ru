@@ -27,7 +27,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 const CHANGELOG_PINNED = {
-    version: '1.0.1',
+    version: '1.0.1a',
     text: 'Нашли баг или некорректно переведённое слово? Сообщайте в теме форума.',
     link: {
         url: 'https://forum.gtaw.io/topic/48270-gtaw-russian-chatlog-magician-ver-01/page/2/#comment-889860',   // ← замените на реальную ссылку на ветку форума
