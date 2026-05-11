@@ -13,6 +13,14 @@ $(document).ready(function() {
     let coloringMode = false;
     let isDragging = false; // For drag selection
     let dragStartElement = null; // Starting element for drag
+
+    /**
+     * Карта пользовательских цветов.
+     * Ключ: "lineIdx:wordIdx" — позиция .colorable элемента в выводе.
+     * Значение: строка CSS-классов цвета (например "green").
+     * Сохраняется перед каждой перерисовкой и восстанавливается после.
+     */
+    let colorMap = {};
     
     // Cache DOM elements
     const $textarea = $("#chatlogInput");
@@ -137,9 +145,50 @@ $(document).ready(function() {
     }
 
     /**
+     * Сохраняет текущую раскраску слов в colorMap перед перерисовкой.
+     */
+    function saveColorMap() {
+        colorMap = {};
+        $output.find('.generated').each(function(lineIdx) {
+            $(this).find('.colorable').each(function(wordIdx) {
+                const cls = $(this).attr('class') || '';
+                const colorClasses = cls.split(/\s+/).filter(c =>
+                    c !== 'colorable' && c !== 'selected-for-coloring' && c.trim() !== ''
+                );
+                if (colorClasses.length > 0) {
+                    colorMap[lineIdx + ':' + wordIdx] = colorClasses.join(' ');
+                }
+            });
+        });
+    }
+
+    /**
+     * Восстанавливает раскраску из colorMap после перерисовки.
+     */
+    function restoreColorMap() {
+        if (Object.keys(colorMap).length === 0) return;
+        $output.find('.generated').each(function(lineIdx) {
+            $(this).find('.colorable').each(function(wordIdx) {
+                const key = lineIdx + ':' + wordIdx;
+                if (colorMap[key]) {
+                    const $el = $(this);
+                    // снимаем все цветовые классы
+                    $(".color-item").each(function() {
+                        $el.removeClass($(this).data('color'));
+                    });
+                    $el.addClass(colorMap[key]);
+                }
+            });
+        });
+    }
+
+    /**
      * Main function to process and format the chat log
      */
     function processOutput() {
+        // Сохраняем раскраску перед перерисовкой
+        saveColorMap();
+
         const chatText = $textarea.val();
         const chatLines = chatText.split("\n")
                                   .map(removeTimestamps)
@@ -177,6 +226,9 @@ $(document).ready(function() {
         
         // After the output is rendered, add span wrappers for more granular coloring
         makeTextColorable();
+
+        // Восстанавливаем пользовательскую раскраску
+        restoreColorMap();
     }
     
     /**
@@ -1628,9 +1680,18 @@ $(document).ready(function() {
             
             // Add the new color class
             $(element).addClass(colorClass);
-            
+
             // Remove selection visual
             $(element).removeClass("selected-for-coloring");
+
+            // Сохраняем в colorMap по позиции элемента
+            const $el = $(element);
+            const $generated = $el.closest('.generated');
+            const lineIdx = $output.find('.generated').index($generated[0]);
+            const wordIdx = $generated.find('.colorable').index(element);
+            if (lineIdx >= 0 && wordIdx >= 0) {
+                colorMap[lineIdx + ':' + wordIdx] = colorClass;
+            }
         });
         
         // Clear all selections after applying colors
