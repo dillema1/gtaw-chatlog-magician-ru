@@ -1408,46 +1408,74 @@ $(document).ready(function() {
      * @returns {string} - Processed text
      */
     function addLineBreaksAndHandleSpans(text) {
-        const maxLineLength = document.getElementById("lineLengthInput").value;
-        let result = "";
-        let currentLineLength = 0;
-        let inSpan = false;
-        let currentSpan = "";
-
-        function addLineBreak() {
-            if (inSpan) {
-                const spanClassMatch = currentSpan.match(/class="([^"]+)"/);
-                const spanClass = spanClassMatch ? spanClassMatch[1] : "";
-                result += `</span><br><span class="${spanClass}">`;
-            } else {
-                result += "<br>";
-            }
-            currentLineLength = 0;
-        }
-
-        for (let i = 0; i < text.length; i++) {
-            if (text[i] === "<" && text.substr(i, 5) === "<span") {
-                let spanEnd = text.indexOf(">", i);
-                currentSpan = text.substring(i, spanEnd + 1);
-                i = spanEnd;
-                inSpan = true;
-                result += currentSpan;
-            } else if (text[i] === "<" && text.substr(i, 7) === "</span>") {
-                inSpan = false;
-                result += "</span>";
-                i += 6;
-            } else {
-                result += text[i];
-                currentLineLength++;
-
-                if (currentLineLength >= maxLineLength && text[i] === " ") {
-                    addLineBreak();
+        const maxLineLength = parseInt(document.getElementById("lineLengthInput").value, 10) || 77;
+    
+        const tokens = [];
+        const tokenRe = /(<[^>]+>)|([^<]+)/g;
+        let m;
+        while ((m = tokenRe.exec(text)) !== null) {
+            if (m[1]) {
+                tokens.push({ type: 'tag', value: m[1] });
+            } else if (m[2]) {
+                const parts = m[2].split(/( +)/);
+                for (const part of parts) {
+                    if (part === '') continue;
+                    if (/^ +$/.test(part)) {
+                        tokens.push({ type: 'space', value: part });
+                    } else {
+                        tokens.push({ type: 'word', value: part });
+                    }
                 }
             }
         }
-
+    
+        let result = '';
+        let lineLen = 0;
+        const openSpans = [];
+    
+        function insertBreak() {
+            for (let i = openSpans.length - 1; i >= 0; i--) {
+                result += '</span>';
+            }
+            result += '<br>';
+            for (const span of openSpans) {
+                result += span;
+            }
+            lineLen = 0;
+        }
+    
+        for (const token of tokens) {
+            if (token.type === 'tag') {
+                const v = token.value;
+                if (/^<span/i.test(v)) {
+                    openSpans.push(v);
+                    result += v;
+                } else if (/^<\/span>/i.test(v)) {
+                    openSpans.pop();
+                    result += v;
+                } else if (/^<br/i.test(v)) {
+                    result += v;
+                    lineLen = 0;
+                } else {
+                    result += v;
+                }
+            } else if (token.type === 'space') {
+                if (lineLen > 0) {
+                    result += token.value;
+                    lineLen += token.value.length;
+                }
+            } else {
+                const wordLen = token.value.length;
+                if (lineLen > 0 && lineLen + wordLen > maxLineLength) {
+                    insertBreak();
+                }
+                result += token.value;
+                lineLen += wordLen;
+            }
+        }
+    
         return result;
-    }
+        }
 
     /**
      * Clears all current selections
