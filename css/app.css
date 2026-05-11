@@ -83,7 +83,7 @@ html::-webkit-scrollbar {
 }
 
 .generated {
-	display: inline;
+	display: block;
 	position: relative;
 	padding: 0.1em 0.2em 0.1em 0.2em;
 	white-space: normal;
