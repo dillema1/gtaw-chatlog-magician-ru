@@ -86,7 +86,7 @@ html::-webkit-scrollbar {
 	display: inline;
 	position: relative;
 	padding: 0.1em 0.2em 0.1em 0.2em;
-	white-space: pre-line;
+	white-space: normal;
 	word-wrap: break-word;
 	line-height: 1.3;
 	background-color: transparent;
